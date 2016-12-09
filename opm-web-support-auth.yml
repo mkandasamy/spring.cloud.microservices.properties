@@ -1,0 +1,57 @@
+server:
+  port: ${SERVER_PORT}
+  
+spring:
+  jackson:
+    serialization:
+      indent-output: true
+docker:
+  container:
+    name: ${DOCKER_CONTAINER_NAME:${ZONE}-${HOST_NAME}-${SERVER_PORT}-${spring.application.name}}
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    availability-zones:
+      region1: zone1,zone2,zone3
+    region: region1
+    service-url:
+      zone1: http://${ZONE1_MAIN_HOST_NAME}:10200/eureka/
+      zone2: http://${ZONE2_MAIN_HOST_NAME}:10200/eureka/
+      zone3: http://${ZONE3_MAIN_HOST_NAME}:10200/eureka/
+      eureka-service-url-poll-interval-seconds: 10
+  instance:
+    hostname: ${HOST_NAME}
+    non-secure-port: ${SERVER_PORT}
+    lease-renewal-interval-in-seconds: 6
+    lease-expiration-duration-in-seconds: 10
+    instance-id: ${docker.container.name}
+    metadata-map:
+      zone: ${ZONE}
+logging:
+  file: /www/logs/${docker.container.name}/spring-boot-logging.log
+info:
+  service: ${spring.application.name}
+  hostname: ${HOST_NAME}
+  port: ${SERVER_PORT}
+  zone: ${ZONE}
+  docker: ${docker.container.name}
+
+opm:
+  web:
+    support:
+      auth:
+        client-id: ****
+        client-secret: ******
+        client-scope: WEB
+        token-secret: *****
+        token-key: jwt
+        token-private-key-file: opm.web.support.auth.private.cert
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 15000
