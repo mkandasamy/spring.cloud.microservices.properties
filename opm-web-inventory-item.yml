@@ -37,9 +37,9 @@ spring:
     serialization:
       indent-output: true
   datasource:
-    url: jdbc:postgresql://mk-test-rds-psq-1a.cwruxiug83fg.us-east-1.rds.amazonaws.com:5432/postgres
-    username: mkandasamy
-    password: S1th3r1!
+    url: <url>
+    username: <username>
+    password: <password>
 hystrix:
   command:
     default:
